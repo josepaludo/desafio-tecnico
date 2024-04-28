@@ -1,46 +1,34 @@
 import { useEffect, useState } from "react"
-import { axiosClient } from "../../utils/api/axiosClient"
-import { ApiRoute } from "../../utils/api/apiRoutes"
-import { TFeaturedMoviesResponse } from "../../utils/api/types"
-import MoviePoster from "./components/MoviePoster"
-import MoviePostersPlaceholder from "./components/MoviePlaceholder"
+import { QueryParams, TFeaturedMoviesResponse } from "../utils/api/types"
+import { ApiRoute } from "../utils/api/apiRoutes"
+import { axiosClient } from "../utils/api/axiosClient"
+import MoviePostersPlaceholder from "../pages/home/components/MoviePlaceholder"
+import MoviePoster from "../pages/home/components/MoviePoster"
 
 
-export default function HomeSubPage() {
+type Params = { url: string, params: QueryParams }
+
+export default function Movies({ url, params }: Params) {
 
     const [movies, setMovies] = useState<TFeaturedMoviesResponse|null>(null)
+    const [page, setPage] = useState<number|string>(params.page ?? 1)
 
     useEffect(() => {
+
+        console.log("USE EFFECT HERE")
+
+        params.page = page
+
         axiosClient
-            .get(ApiRoute.FeaturedMovies)
+            .get( url, { params } )
             .then(res => {
                 const data = res.data as TFeaturedMoviesResponse
                 setMovies(data)
             })
             .catch(err => console.log(ApiRoute.FeaturedMovies, " | ERROR : ", err) )
-    }, [])
+    }, [page, params])
 
     return <>
-
-        <div className="flex flex-col lg:flex-row gap-10">
-
-            <div className="w-full lg:w-1/2">
-
-                <h1 className="text-3xl">
-                    Últimos Acessados
-                </h1>
-            </div>
-
-            <div className="w-full lg:w-1/2">
-
-                <div className="h-full w-full min-h-96 bg-red-400"></div>
-            </div>
-        </div>
-
-        <h1 className="text-4xl my-10">
-            Filmes em destaque
-        </h1>
-
         <div className="flex flex-wrap gap-5 justify-around md:justify-between">
             {
                 !movies ? 

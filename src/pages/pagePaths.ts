@@ -1,7 +1,8 @@
 
 export enum RouteParam {
     MovieName = "movieName",
-    CategoryName = "categoryName"
+    CategoryName = "categoryName",
+    Id = "id"
 }
 
 export enum BasePath {
@@ -11,7 +12,7 @@ export enum BasePath {
 
 export enum Path {
     Home = "/",
-    HomeCategory = `${BasePath.HomeCategory}/:${RouteParam.CategoryName}`,
+    HomeCategory = `${BasePath.HomeCategory}/:${RouteParam.Id}/:${RouteParam.CategoryName}`,
     Results = "/results",
-    Movie = `${BasePath.Movie}/:${RouteParam.MovieName}`
+    Movie = `${BasePath.Movie}/:${RouteParam.Id}/:${RouteParam.MovieName}`
 }
