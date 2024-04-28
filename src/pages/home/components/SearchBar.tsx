@@ -17,11 +17,14 @@ export default function SearchBar() {
                 rounded-full
                 bg-stone-100
                 py-2 pr-3 pl-6
-                w-full max-w-screen-lg mx-auto
+                w-full max-w-screen-2xl mx-auto
                 overflow-hidden
             "
         >
             <input
+                name="name"
+                type="text"
+                placeholder="Search for Movie Titles"
                 className="
                     h-full
                     outline-none 
@@ -30,17 +33,15 @@ export default function SearchBar() {
                     pr-2
                     grow
                 "
-                type="text"
-                placeholder="Search for Movie Titles"
             />
 
             <button
-                    className="
-                        text-stone-900
-                        my-auto ml-5 mr-3
-                        hover:opacity-50 transition-opacity duration-500
-                        hidden xsm:block
-                    "
+                className="
+                    text-stone-900
+                    my-auto ml-5 mr-3
+                    hover:opacity-50 transition-opacity duration-500
+                    hidden xsm:block
+                "
                 type="submit"
             >
                 <SearchIcon />

@@ -3,12 +3,17 @@
 @tailwind utilities;
 
 
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
 body {
     height: 100dvh;
 }
 
 #root {
     @apply
+        relative
         flex flex-col justify-between
         h-full
         text-stone-50 text-lg
