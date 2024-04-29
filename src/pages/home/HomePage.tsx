@@ -3,7 +3,7 @@ import { RouteParam } from "../pagePaths"
 import HomeCategorySubPage from "./HomeCategorySubPage"
 import HomeSubPage from "./HomeSubPage"
 import CategoryLinks from "./components/CategoryLinks"
-import SearchBar from "./components/SearchBar"
+import SearchBar from "../../components/SearchBar"
 
 
 type HomePageParams = {
@@ -15,18 +15,21 @@ export default function HomePage() {
 
     const params = useParams<HomePageParams>()
 
+    const category = params[RouteParam.CategoryName]
+    const id = params[RouteParam.Id]
+
     return <>
 
         <SearchBar />
 
-        <CategoryLinks currentCategory={params[RouteParam.CategoryName]} />
+        <CategoryLinks currentCategory={category} />
 
         { 
-            !(params[RouteParam.CategoryName] && params[RouteParam.Id] ) ?
+            !( category && id ) ?
             <HomeSubPage /> :
             <HomeCategorySubPage
-                categoryName={params[RouteParam.CategoryName]}
-                genreId={params[RouteParam.Id]}
+                categoryName={category}
+                genreId={id}
             />
         }
 

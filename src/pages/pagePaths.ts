@@ -1,4 +1,8 @@
 
+export enum SearchParam {
+    Title = "title"
+}
+
 export enum RouteParam {
     MovieName = "movieName",
     CategoryName = "categoryName",

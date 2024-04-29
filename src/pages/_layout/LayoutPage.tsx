@@ -8,7 +8,12 @@ export default function LayoutPage() {
     return <>
         <NavBar />
 
-        <main className="grow overflow-scroll p-5 pb-12">
+        <main className="
+            grow overflow-scroll
+            p-5 pb-12 xl:px-20
+            max-w-screen-2xl 2xl:mx-auto 
+            2xl:w-screen
+        ">
             <Outlet />
         </main>
 

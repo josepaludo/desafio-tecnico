@@ -1,24 +1,9 @@
-import { useEffect, useState } from "react"
-import { axiosClient } from "../../utils/api/axiosClient"
 import { ApiRoute } from "../../utils/api/apiRoutes"
-import { TFeaturedMoviesResponse } from "../../utils/api/types"
-import MoviePoster from "./components/MoviePoster"
-import MoviePostersPlaceholder from "./components/MoviePlaceholder"
+import Movies from "../../components/Movies"
 
 
 export default function HomeSubPage() {
 
-    const [movies, setMovies] = useState<TFeaturedMoviesResponse|null>(null)
-
-    useEffect(() => {
-        axiosClient
-            .get(ApiRoute.FeaturedMovies)
-            .then(res => {
-                const data = res.data as TFeaturedMoviesResponse
-                setMovies(data)
-            })
-            .catch(err => console.log(ApiRoute.FeaturedMovies, " | ERROR : ", err) )
-    }, [])
 
     return <>
 
@@ -41,21 +26,6 @@ export default function HomeSubPage() {
             Filmes em destaque
         </h1>
 
-        <div className="flex flex-wrap gap-5 justify-around md:justify-between">
-            {
-                !movies ? 
-                <MoviePostersPlaceholder /> :
-                [movies[0]].map(movie => (
-                    <MoviePoster
-                        key={movie.id}
-                        id={movie.id}
-                        date={movie.date}
-                        posterUrl={movie.posterUrl}
-                        title={movie.title}
-                    />
-                ))
-            }
-        </div>
-        <MoviePostersPlaceholder />
+        <Movies url={ApiRoute.FeaturedMovies} params={{}} />
     </>
 }

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
-import { QueryParams, TFeaturedMoviesResponse } from "../utils/api/types"
-import { ApiRoute } from "../utils/api/apiRoutes"
+import { TQueryParams, TFeaturedMoviesResponse } from "../utils/api/types"
 import { axiosClient } from "../utils/api/axiosClient"
 import MoviePostersPlaceholder from "../pages/home/components/MoviePlaceholder"
 import MoviePoster from "../pages/home/components/MoviePoster"
 
 
-type Params = { url: string, params: QueryParams }
+type Params = { url: string, params: TQueryParams }
 
 export default function Movies({ url, params }: Params) {
 
@@ -23,10 +22,11 @@ export default function Movies({ url, params }: Params) {
             .get( url, { params } )
             .then(res => {
                 const data = res.data as TFeaturedMoviesResponse
+                console.log("DATA: ", data)
                 setMovies(data)
             })
-            .catch(err => console.log(ApiRoute.FeaturedMovies, " | ERROR : ", err) )
-    }, [page, params])
+            .catch(err => console.log("URL : ", url , " | ERROR : ", err) )
+    }, [page, params, url])
 
     return <>
         <div className="flex flex-wrap gap-5 justify-around md:justify-between">
@@ -44,6 +44,5 @@ export default function Movies({ url, params }: Params) {
                 ))
             }
         </div>
-        <MoviePostersPlaceholder />
     </>
 }
