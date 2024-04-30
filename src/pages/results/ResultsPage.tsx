@@ -37,8 +37,8 @@ export default function ResultsPage() {
 
         <h1 className="text-2xl my-5">
             Exibindo resultados para: 
-            <span className="ml-1 font-semibold">
-                '{ title }'
+            <span className="ml-2 font-semibold">
+                { title }
             </span>
         </h1>
 

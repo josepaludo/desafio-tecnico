@@ -4,6 +4,7 @@ export type TMovieType = {
     title: string;
     date: Date;
     id: number;
+    backdropPath?: string
 }
 
 export type TFeaturedMoviesResponse = Array<TMovieType>
@@ -23,25 +24,38 @@ export type TQueryParams = {
     page?: string|number
 }
 
-export type TMovieInfo = {
-    adult: boolean;
-    backdrop_path: string;
-    belongs_to_collection: null | {
-        id: number;
-        name: string;
-        poster_path: string;
-        backdrop_path: string;
-    };
-    budget: number;
-    genres: { id: number; name: string }[];
-    homepage: string;
+
+export type TMoviePageResponse = {
+    credits: TCredits,
+    movieInfo: TMovieInfo
+}
+
+export type TCredits = {
+    crew: Array<TCrew>,
+    cast: Array<TCast>
+}
+
+export type TCast = {
     id: number;
-    imdb_id: string;
-    origin_country: string[];
-    original_language: string;
-    original_title: string;
+    character: string;
+    name: string;
+    profile_path: string;
+}
+
+export type TCrew = {
+    id: number;
+    job: string;
+    name: string;
+    profile_path: string | null;
+}
+
+export type TMovieInfo = {
+    backdrop_path: string;
+    budget: number;
+    revenue: number;
+    genres: { id: number; name: string }[];
+    id: number;
     overview: string;
-    popularity: number;
     poster_path: string;
     production_companies: {
         id: number;
@@ -49,44 +63,23 @@ export type TMovieInfo = {
         name: string;
         origin_country: string;
     }[];
-    production_countries: { iso_3166_1: string; name: string }[];
     release_date: string;
-    revenue: number;
     runtime: number;
-    spoken_languages: { english_name: string; iso_639_1: string; name: string }[];
-    status: string;
-    tagline: string;
     title: string;
-    video: boolean;
     vote_average: number;
-    vote_count: number;
+
+    // homepage: string;
+    // status: string;
 }
 
-export type TCastInfo = {
-    adult: boolean;
-    cast_id: number;
-    character: string;
-    credit_id: string;
-    gender: number;
-    id: number;
-    known_for_department: string;
-    name: string;
-    order: number;
-    original_name: string;
-    popularity: number;
-    profile_path: string | null;
+export enum Jobs {
+    Director = "Director",
+    Screenplay = "Screenplay",
+    Producer = "Producer"
 }
 
-export type TCrewInfo = {
-    adult: boolean;
-    credit_id: string;
-    department: string;
-    gender: number;
-    id: number;
-    job: string;
-    known_for_department: string;
-    name: string;
-    original_name: string;
-    popularity: number;
-    profile_path: string | null;
-}
+export const JobsList = [
+    Jobs.Director,
+    Jobs.Producer,
+    Jobs.Screenplay,
+]

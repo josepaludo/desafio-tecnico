@@ -10,11 +10,9 @@ type Params = { url: string, params: TQueryParams }
 export default function Movies({ url, params }: Params) {
 
     const [movies, setMovies] = useState<TFeaturedMoviesResponse|null>(null)
-    const [page, setPage] = useState<number|string>(params.page ?? 1)
+    const [page] = useState<number|string>(params.page ?? 1)
 
     useEffect(() => {
-
-        console.log("USE EFFECT HERE")
 
         params.page = page
 
@@ -22,18 +20,17 @@ export default function Movies({ url, params }: Params) {
             .get( url, { params } )
             .then(res => {
                 const data = res.data as TFeaturedMoviesResponse
-                console.log("DATA: ", data)
                 setMovies(data)
             })
-            .catch(err => console.log("URL : ", url , " | ERROR : ", err) )
     }, [page, params, url])
+
 
     return <>
         <div className="flex flex-wrap gap-5 justify-around md:justify-between">
             {
                 !movies ? 
                 <MoviePostersPlaceholder /> :
-                [movies[0]].map(movie => (
+                movies.slice(0, 5).map(movie => (
                     <MoviePoster
                         key={movie.id}
                         id={movie.id}

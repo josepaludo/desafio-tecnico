@@ -3,7 +3,9 @@ import { RouteParam } from "../pagePaths"
 import { useEffect, useState } from "react"
 import { axiosClient } from "../../utils/api/axiosClient"
 import { ApiRoute } from "../../utils/api/apiRoutes"
-import { TMovieInfo } from "../../utils/api/types"
+import { TCast, TCrew, TMoviePageResponse } from "../../utils/api/types"
+import { toDollars } from "../../utils/helperFunctions"
+import { useLocalStorage } from "../../hooks/useLocalStorage"
 
 
 type MoviePageParams = {
@@ -13,8 +15,9 @@ type MoviePageParams = {
 
 export default function MoviePage() {
 
-    const [movie, setMovie] = useState<TMovieInfo|null>(null)
+    const [data, setData] = useState<TMoviePageResponse|null>(null)
     const moviePageParams = useParams<MoviePageParams>()
+    const { setMoviesViewed } = useLocalStorage()
 
     const params = {
         movie_id: moviePageParams[RouteParam.Id]
@@ -24,37 +27,36 @@ export default function MoviePage() {
         axiosClient
             .get(ApiRoute.MovieDetails, { params })
             .then(res => {
-                const data = res.data as {
-                    movieInfo: TMovieInfo,
-                    credits: unknown
-                }
-                console.log(data.credits)
-                setMovie(data.movieInfo)
+                const data: TMoviePageResponse = res.data
+
+                setData(data)
+                setMoviesViewed(data.movieInfo)
             })
     }, [])
 
-    if (!movie) {
+    if (!data) {
         return <>
             Loading
         </>
     }
 
-    return <>
-        <div className="flex flex-col md:flex-row gap-10 pt-5">
+    const movie = data.movieInfo
+    const { crew, cast } = data.credits
 
-            <div className="
-                w-80 min-w-80
-                h-96
-                bg-slate-300
-            ">
-            </div>
+    return <>
+        <div className="flex flex-col-reverse md:flex-row gap-10 pt-5">
+
+            <img
+                src={movie.poster_path}
+                alt={"Poster do filme "+movie.title}
+            />
 
             <div>
                 <h1 className="text-4xl font-semibold mb-5">
                     { movie.title }
                 </h1>
 
-                <div className="flex flex-wrap gap-1 mb-3">
+                <p className="flex flex-wrap gap-1 mb-3">
                     <span className="font-semibold">
                         { new Date(movie.release_date).getFullYear() }
                     </span>
@@ -72,16 +74,25 @@ export default function MoviePage() {
                             .map(production_company => production_company.name)
                             .join(", ") }
                     </span>
-                </div>
+                </p>
 
-                <div className="mb-3">
+                <p className="mb-3">
                     Média de avaliações: 
                     <span className="font-semibold ml-1">
                         { parseFloat(movie.vote_average.toFixed(1)) }
                     </span>
-                </div>
+                </p>
 
-                <h2 className="text-2xl mb-3">
+                { movie.revenue > 0 &&
+                    <p className="text-base">
+                        Receita: { toDollars(movie.revenue) }
+                    </p>
+                }
+                <p className="text-base">
+                    Orçamento: { toDollars(movie.budget) }
+                </p>
+
+                <h2 className="text-2xl mb-3 mt-5 font-semibold">
                     Sinopse
                 </h2>
                 <p>
@@ -94,32 +105,70 @@ export default function MoviePage() {
 
             <div className="w-full md:w-1/2 py-5">
                 <h2 className="text-2xl">
-                    Atores
+                    Elenco
                 </h2>
 
                 <div className="flex flex-wrap gap-3 my-5">
-                    {
-                        ["João", "Maria", "Lucas", "Carlos", "Renato", "Josefina"]
-                        .map(nome => (
-                            <div key={nome} >
-                                <div className="h-60 w-40 bg-slate-300"></div>
-                                <p className="text-center">
-                                    {nome}
-                                </p>
-                            </div>
-                        ))
-                    }
+                    { cast.map(_cast =>
+                        <ProfileImage profile={_cast} key={_cast.id} />
+                    )}
                 </div>
             </div>
 
             <div className="w-full md:w-1/2 py-5">
-                <h2 className="text-2xl">
-                    Trilha Sonora
-                </h2>
 
-                <div className="bg-slate-300 min-h-96 my-5">
+                <div>
+                    <h2 className="text-2xl">
+                        Trilha Sonora
+                    </h2>
+
+                    <div className="bg-slate-300 min-h-96 my-5">
+                    </div>
                 </div>
+
+                <div>
+                    <h2 className="text-2xl">
+                        Produtores
+                    </h2>
+
+                    <div className="flex flex-wrap gap-3 my-5">
+                        { crew.map(_cast =>
+                            <ProfileImage profile={_cast} key={_cast.id} />
+                        )}
+                    </div>
+                </div>
+
             </div>
         </div>
     </>
+}
+
+function ProfileImage({ profile }: { profile: TCrew|TCast }) {
+
+    return (
+        <div className="text-center w-[200px]">
+            {
+                !profile.profile_path ?
+                <div className="h-[300px] bg-slate-200" /> :
+                <img
+                    src={profile.profile_path}
+                    alt={"Foto de perfil de "+profile.name}
+                />
+            }
+            <p className="font-semibold mt-2">
+                {profile.name}
+            </p>
+            { (profile as TCrew).job &&
+                <p>
+                    { (profile as TCrew).job }
+                </p>
+            }
+            {
+                (profile as TCast).profile_path &&
+                <p>
+                    { (profile as TCast).character }
+                </p>
+            }
+        </div>
+    )
 }

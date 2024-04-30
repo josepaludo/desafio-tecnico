@@ -4,12 +4,10 @@ import { camelCase, formatDate } from "../../../utils/helperFunctions";
 import { BasePath } from "../../pagePaths";
 
 
-export default function MoviePoster({id, title, date, posterUrl}: TMovieType) {
-
-    // const url = BasePath.Movie + "/" + id + camelCase(title)
+export default function MoviePoster({id, title, date, posterUrl, small}: TMovieType& {small?: boolean}) {
 
     return <>
-        <div>
+        <div className={ small ? "max-w-[150px]" : "max-w-[250px]" }>
             <img
                 className="w-full max-w-sm"
                 src={posterUrl}
