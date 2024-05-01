@@ -12,7 +12,9 @@ export function formatDate(date: Date) {
 }
 
 export function camelCase(str: string) {
-    return str.toLocaleLowerCase().replace(" ", "_")
+
+    //@ts-expect-error Error
+    return str.toLocaleLowerCase().replaceAll(" ", "_")
 }
 
 function slice(str: string, arr: Array<string>) {
@@ -22,16 +24,23 @@ function slice(str: string, arr: Array<string>) {
     }
 
     const rest = str.length%3 
+
     if (rest !== 0) {
-        return slice( str.slice(rest), [...arr, str.slice(0, rest)])
+        return slice(
+            str.slice(rest),
+            [...arr, str.slice(0, rest)]
+        )
     }
 
-    return slice( str.slice(3), [...arr, str.slice(0, 3)] )
+    return slice(
+        str.slice(3),
+        [...arr, str.slice(0, 3)]
+    )
 }
 
 export function toDollars(num: number) {
 
+    const dotSeparatedNums = slice( num.toString(), [] ).join(".") 
 
-
-    return "$" + slice( num.toString(), [] ).join(".") + ",00"
+    return "$" + dotSeparatedNums + ",00"
 }

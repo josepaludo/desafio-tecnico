@@ -11,12 +11,16 @@ type Params = {
     currentCategory?: string
 }
 
+const MAX_GENRES = 6
+
 
 export default function CategoryLinks({currentCategory}: Params) {
 
     const [genres, setGenres] = useState<Array<TGenre>|null>(null)
+    const [showAll, setShowAll] = useState(false)
 
     useEffect(() => {
+
         axiosClient
             .get(ApiRoute.Genres)
             .then(res => {
@@ -37,15 +41,17 @@ export default function CategoryLinks({currentCategory}: Params) {
         `${BasePath.HomeCategory}/${category.id}/${camelCase(category.name)}`
     )
 
+    const genresToShow = (!genres || showAll) ? genres : genres.slice(0, MAX_GENRES)
+
     return <>
         <div className="flex flex-wrap gap-2 my-10">
-            { genres && genres.map(category => (
+            { genresToShow && genresToShow.map(category => <>
                 <Link
                     to={getCategoryPath(category)}
                     key={category.id}
                     className={`
                         rounded-full px-12 py-2 shadow-md
-                        transition-all duration-200
+                        transition-all duration-200 block
                         ${
                             isCurrent[category.id] ?
                             "bg-slate-600 text-stone-50 hover:bg-slate-700" :
@@ -55,7 +61,21 @@ export default function CategoryLinks({currentCategory}: Params) {
                 >
                     { category.name }
                 </Link>
-            ))}
+            </>)}
+
+            { !showAll &&
+                <button
+                    onClick={() => setShowAll(true)} 
+                    type="button"
+                    className="
+                        rounded-full px-12 py-2 shadow-md
+                        border 
+                        block
+                    "
+                >
+                    Show All
+                </button>
+            }
         </div>
     </>
 }

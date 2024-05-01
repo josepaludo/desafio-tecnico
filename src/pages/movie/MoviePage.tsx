@@ -3,7 +3,7 @@ import { RouteParam } from "../pagePaths"
 import { useEffect, useState } from "react"
 import { axiosClient } from "../../utils/api/axiosClient"
 import { ApiRoute } from "../../utils/api/apiRoutes"
-import { TCast, TCrew, TMoviePageResponse } from "../../utils/api/types"
+import { TCast, TCrew, TMoviePageResponse, TTrack } from "../../utils/api/types"
 import { toDollars } from "../../utils/helperFunctions"
 import { useLocalStorage } from "../../hooks/useLocalStorage"
 import MusicPlayer from "./components/MusicPlayer"
@@ -16,7 +16,8 @@ type MoviePageParams = {
 
 export default function MoviePage() {
 
-    return <MusicPlayer />
+    const [ musics, setMusics ] = useState<Array<TTrack>|null>(null)
+
 
     const [data, setData] = useState<TMoviePageResponse|null>(null)
     const moviePageParams = useParams<MoviePageParams>()
@@ -27,6 +28,7 @@ export default function MoviePage() {
     }
 
     useEffect(() => {
+
         axiosClient
             .get(ApiRoute.MovieDetails, { params })
             .then(res => {
@@ -35,11 +37,38 @@ export default function MoviePage() {
                 setData(data)
                 setMoviesViewed(data.movieInfo)
             })
+
+        axiosClient
+            .get(ApiRoute.Songs)
+            .then(res => {
+                const data = res.data as Array<TTrack>
+                setMusics(data)
+            })
+            .catch(err => console.log(err))
     }, [])
+
 
     if (!data) {
         return <>
-            Loading
+            <div className="flex gap-10 mb-10">
+                <div className="w-1/2 h-[600px] bg-slate-800"/>
+                <div className="w-1/2">
+                    <h1 className="text-5xl">
+                        {
+                            //@ts-expect-error No error
+                            moviePageParams[RouteParam.MovieName].replaceAll("_", " ")
+                        }
+                    </h1>
+                </div>
+            </div>
+            <div className="flex gap-10">
+                <div className="w-1/2 text-2xl">
+                    Elenco
+                </div>
+                <div className="w-1/2 text-2xl">
+                    Trilha Sonora
+                </div>
+            </div>
         </>
     }
 
@@ -121,26 +150,33 @@ export default function MoviePage() {
 
             <div className="w-full md:w-1/2 py-5">
 
-                <div>
-                    <h2 className="text-2xl">
-                        Trilha Sonora
-                    </h2>
+                { musics && musics.length > 0 && <>
+                    <div>
+                        <h2 className="text-2xl">
+                            Trilha Sonora
+                        </h2>
 
-                    <MusicPlayer />
-                </div>
-
-                <div>
-                    <h2 className="text-2xl">
-                        Produtores
-                    </h2>
-
-                    <div className="flex flex-wrap gap-3 my-5">
-                        { crew.map(_cast =>
-                            <ProfileImage profile={_cast} key={_cast.id} />
-                        )}
+                        <div className="py-3">
+                            { 
+                                musics?.map(music => (
+                                    <MusicPlayer key={music.name} music={music} />
+                                ))
+                            }
+                        </div>
                     </div>
-                </div>
 
+                    <div className="">
+                        <h2 className="text-2xl">
+                            Produtores
+                        </h2>
+
+                        <div className="flex flex-wrap gap-3 my-5">
+                            { crew.map(_cast =>
+                                <ProfileImage profile={_cast} key={_cast.id} />
+                            )}
+                        </div>
+                    </div>
+                </>}
             </div>
         </div>
     </>

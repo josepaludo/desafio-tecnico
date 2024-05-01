@@ -1,2 +1,2 @@
 
-export const MAX_STORED_MOVIES = 8
+export const MAX_STORED_MOVIES = 6

@@ -11,7 +11,7 @@ export default function MoviePostersPlaceholder() {
         <div className="flex flex-wrap gap-5 justify-around md:justify-between">
             {
                 numbers.map(number => (
-                    <div key={number} className="bg-red-200 w-60 h-96">
+                    <div key={number} className="bg-slate-800 w-60 h-96">
                     </div>
                 ))
             }

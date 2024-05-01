@@ -2,11 +2,13 @@ import { ApiRoute } from "../../utils/api/apiRoutes"
 import Movies from "../../components/Movies"
 import { useLocalStorage } from "../../hooks/useLocalStorage"
 import MoviePoster from "./components/MoviePoster"
+import { useState } from "react"
 
 
 export default function HomeSubPage() {
 
     const { moviesViewed } = useLocalStorage()
+    const [loadedBackdrop, setLoadedBackdrop] = useState(false)
 
     const showMoviesViewed = moviesViewed.length > 0
 
@@ -43,13 +45,14 @@ export default function HomeSubPage() {
 
                     </div>
 
-
                     <div className={ "w-full lg:w-1/2" }>
-
+                        { !loadedBackdrop && (
+                            <div className="h-96 w-full bg-slate-800" />
+                        )}
                         <img
+                            onLoad={() => setLoadedBackdrop(true)}
                             src={backdropUrl}
                         />
-                        {/* <div className="h-full w-full min-h-96 bg-red-400"></div> */}
                     </div>
                 </>
             }

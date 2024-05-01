@@ -30,7 +30,7 @@ export default function Movies({ url, params }: Params) {
             {
                 !movies ? 
                 <MoviePostersPlaceholder /> :
-                movies.slice(0, 5).map(movie => (
+                movies.map(movie => (
                     <MoviePoster
                         key={movie.id}
                         id={movie.id}

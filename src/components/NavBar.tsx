@@ -6,7 +6,7 @@ export default function NavBar() {
 
     return <>
 
-        <nav className="p-5 bg-slate-900">
+        <nav className="p-5 bg-slate-950">
 
             <Link to={Path.Home} className="text-2xl font-semibold">
                 MovieHub
