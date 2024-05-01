@@ -67,6 +67,7 @@ export type TMovieInfo = {
     runtime: number;
     title: string;
     vote_average: number;
+    wikidata_id: string
 
     // homepage: string;
     // status: string;
@@ -83,3 +84,30 @@ export const JobsList = [
     Jobs.Producer,
     Jobs.Screenplay,
 ]
+
+export type TTrack = {
+    external_urls: {
+        spotify: string
+    }
+    artists: {
+
+        external_urls: {
+            spotify: string
+        }
+        name: string
+    }[]
+    album: {
+        external_urls: {
+            spotify: string;
+        };
+        images: {
+            height: number;
+            url: string;
+            width: number;
+        } []
+        release_date: string
+        name: string
+    }
+    name: string
+    preview_url: string | null
+}

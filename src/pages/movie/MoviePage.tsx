@@ -6,6 +6,7 @@ import { ApiRoute } from "../../utils/api/apiRoutes"
 import { TCast, TCrew, TMoviePageResponse } from "../../utils/api/types"
 import { toDollars } from "../../utils/helperFunctions"
 import { useLocalStorage } from "../../hooks/useLocalStorage"
+import MusicPlayer from "./components/MusicPlayer"
 
 
 type MoviePageParams = {
@@ -14,6 +15,8 @@ type MoviePageParams = {
 }
 
 export default function MoviePage() {
+
+    return <MusicPlayer />
 
     const [data, setData] = useState<TMoviePageResponse|null>(null)
     const moviePageParams = useParams<MoviePageParams>()
@@ -44,6 +47,7 @@ export default function MoviePage() {
     const { crew, cast } = data.credits
 
     return <>
+
         <div className="flex flex-col-reverse md:flex-row gap-10 pt-5">
 
             <img
@@ -122,8 +126,7 @@ export default function MoviePage() {
                         Trilha Sonora
                     </h2>
 
-                    <div className="bg-slate-300 min-h-96 my-5">
-                    </div>
+                    <MusicPlayer />
                 </div>
 
                 <div>
