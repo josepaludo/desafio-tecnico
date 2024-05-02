@@ -3,10 +3,10 @@ import { RouteParam } from "../pagePaths"
 import { useEffect, useState } from "react"
 import { axiosClient } from "../../utils/api/axiosClient"
 import { ApiRoute } from "../../utils/api/apiRoutes"
-import { TCast, TCrew, TMoviePageResponse, TTrack } from "../../utils/api/types"
+import { TCast, TCrew, TMoviePageResponse } from "../../utils/api/types"
 import { toDollars } from "../../utils/helperFunctions"
 import { useLocalStorage } from "../../hooks/useLocalStorage"
-import MusicPlayer from "./components/MusicPlayer"
+import Soundtrack from "./components/Soundtrack"
 
 
 type MoviePageParams = {
@@ -15,9 +15,6 @@ type MoviePageParams = {
 }
 
 export default function MoviePage() {
-
-    const [ musics, setMusics ] = useState<Array<TTrack>|null>(null)
-
 
     const [data, setData] = useState<TMoviePageResponse|null>(null)
     const moviePageParams = useParams<MoviePageParams>()
@@ -38,13 +35,6 @@ export default function MoviePage() {
                 setMoviesViewed(data.movieInfo)
             })
 
-        axiosClient
-            .get(ApiRoute.Songs)
-            .then(res => {
-                const data = res.data as Array<TTrack>
-                setMusics(data)
-            })
-            .catch(err => console.log(err))
     }, [])
 
 
@@ -150,33 +140,19 @@ export default function MoviePage() {
 
             <div className="w-full md:w-1/2 py-5">
 
-                { musics && musics.length > 0 && <>
-                    <div>
-                        <h2 className="text-2xl">
-                            Trilha Sonora
-                        </h2>
+                <Soundtrack imdb_id={movie.imdb_id} />
 
-                        <div className="py-3">
-                            { 
-                                musics?.map(music => (
-                                    <MusicPlayer key={music.name} music={music} />
-                                ))
-                            }
-                        </div>
+                <div className="">
+                    <h2 className="text-2xl">
+                        Produtores
+                    </h2>
+
+                    <div className="flex flex-wrap gap-3 my-5">
+                        { crew.map(_cast =>
+                            <ProfileImage profile={_cast} key={_cast.id} />
+                        )}
                     </div>
-
-                    <div className="">
-                        <h2 className="text-2xl">
-                            Produtores
-                        </h2>
-
-                        <div className="flex flex-wrap gap-3 my-5">
-                            { crew.map(_cast =>
-                                <ProfileImage profile={_cast} key={_cast.id} />
-                            )}
-                        </div>
-                    </div>
-                </>}
+                </div>
             </div>
         </div>
     </>

@@ -5,6 +5,5 @@ export enum ApiRoute {
     Genres = "/genres",
     FindMovie = "/find_movie",
     MovieDetails = "/movie_details",
-    Songs = "/spotify",
-    TestWiki = "/wiki"
+    Songs = "/songs",
 }

@@ -67,7 +67,8 @@ export type TMovieInfo = {
     runtime: number;
     title: string;
     vote_average: number;
-    wikidata_id: string
+    imdb_id: string
+
 
     // homepage: string;
     // status: string;
