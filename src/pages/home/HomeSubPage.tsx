@@ -18,10 +18,10 @@ export default function HomeSubPage() {
 
     return <>
 
-        <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex flex-col xl:flex-row gap-10">
             {
                 showMoviesViewed && <>
-                    <div className="w-full lg:w-1/2">
+                    <div className={ "w-full " + loadedBackdrop ? "xl:w-1/3" : "" }>
 
                         <h1 className="text-3xl mb-3">
                             Últimos Acessados
@@ -45,11 +45,9 @@ export default function HomeSubPage() {
 
                     </div>
 
-                    <div className={ "w-full lg:w-1/2" }>
-                        { !loadedBackdrop && (
-                            <div className="h-96 w-full bg-slate-800" />
-                        )}
+                    <div className={ "w-full xl:w-2/3" }>
                         <img
+                            onError={() => setLoadedBackdrop(false)}
                             onLoad={() => setLoadedBackdrop(true)}
                             src={backdropUrl}
                         />

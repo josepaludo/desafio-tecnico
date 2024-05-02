@@ -8,6 +8,18 @@ export function useLocalStorage() {
 
     const [ moviesViewed, _setMoviesViewed ] = useState<Array<TMovieType>>([])
 
+    useEffect(() => {
+
+        const movies = currentMovies()
+
+        if (!movies) {
+            return
+        }
+
+        _setMoviesViewed( movies )
+
+    }, [])
+
     function currentMovies() {
 
         const moviesString = localStorage.getItem(StorageKey.MoviesViewed)
@@ -37,25 +49,13 @@ export function useLocalStorage() {
         newMoviesViewed = newMoviesViewed.filter(
             _movie => Number(_movie.id) !== Number(movie.id)
         )
-        newMoviesViewed = [ movie, ...newMoviesViewed.slice(0, MAX_STORED_MOVIES) ]
+        newMoviesViewed = [ movie, ...newMoviesViewed ].slice(0, MAX_STORED_MOVIES)
 
         const stringValue = JSON.stringify(newMoviesViewed)
         localStorage.setItem(StorageKey.MoviesViewed, stringValue)
 
         _setMoviesViewed(newMoviesViewed)
     }
-
-    useEffect(() => {
-
-        const movies = currentMovies()
-
-        if (!movies) {
-            return
-        }
-
-        _setMoviesViewed( movies )
-
-    }, [])
 
     return { moviesViewed, setMoviesViewed }
 }

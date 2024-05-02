@@ -5,6 +5,7 @@ import { axiosClient } from "../../../utils/api/axiosClient"
 import { TGenre, TGenreResponse } from "../../../utils/api/types"
 import { camelCase } from "../../../utils/helperFunctions"
 import { ApiRoute } from "../../../utils/api/apiRoutes"
+import { shuffleArray } from "../../../utils/functions"
 
 
 type Params = {
@@ -12,7 +13,6 @@ type Params = {
 }
 
 const MAX_GENRES = 6
-
 
 export default function CategoryLinks({currentCategory}: Params) {
 
@@ -31,7 +31,8 @@ export default function CategoryLinks({currentCategory}: Params) {
 
     const isCurrent: { [categoryId: number]: boolean } = {}
 
-    for (const category of (genres ?? [])) {
+    console.log("")
+    for (const category of (genres ?? []).sort((a, b) => a.id - b.id)) {
         isCurrent[category.id] = camelCase(category.name) === currentCategory
     }
 
@@ -41,11 +42,19 @@ export default function CategoryLinks({currentCategory}: Params) {
         `${BasePath.HomeCategory}/${category.id}/${camelCase(category.name)}`
     )
 
-    const genresToShow = (!genres || showAll) ? genres : genres.slice(0, MAX_GENRES)
+    const visibleGenres = (
+        (!genres || showAll) ? genres :
+        shuffleArray(genres.slice(0, MAX_GENRES))
+    )
+
+    for (const category of genres ?? []) {
+        console.log(category.id)
+    }
 
     return <>
         <div className="flex flex-wrap gap-2 my-10">
-            { genresToShow && genresToShow.map(category => <>
+            { visibleGenres && visibleGenres.map(category => (
+
                 <Link
                     to={getCategoryPath(category)}
                     key={category.id}
@@ -61,7 +70,7 @@ export default function CategoryLinks({currentCategory}: Params) {
                 >
                     { category.name }
                 </Link>
-            </>)}
+            ))}
 
             { !showAll &&
                 <button
